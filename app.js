@@ -2,6 +2,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const session = require('express-session');
 
 const PORT = 4000;
 const app = express();
@@ -11,15 +12,27 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(
+  session({
+    secret: 'soo',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      // maxAge: 1000 * 60 * 60,
+    },
+  }),
+);
 
 // 라우터파일 작성 및 라우팅
 const indexRouter = require('./routes');
 const userRouter = require('./routes/user');
 const chatRouter = require('./routes/chat');
+const mysqlRouter = require('./routes/mysql');
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/chat', chatRouter);
+app.use('/mysql', mysqlRouter);
 
 // app.js 내에서 라우팅
 // app.get('/', (req, res) => {
